@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur1" />
+      <feGaussianBlur stdDeviation="6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <linearGradient id="gradient-wave" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded box -->
+  <rect width="100" height="100" rx="24" fill="#020617" stroke="#1e293b" stroke-width="1.5" />
+
+  <!-- Brain Silhouette Outline -->
+  <path d="M 50 22 
+           C 34 22, 28 32, 28 44
+           C 28 54, 34 60, 38 64
+           C 36 68, 38 73, 44 76
+           C 48 78, 50 78, 50 78
+           C 50 78, 52 78, 56 76
+           C 62 73, 64 68, 62 64
+           C 66 60, 72 54, 72 44
+           C 72 32, 66 22, 50 22 Z" 
+        fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Glowing Brainwave electrical activity paths inside -->
+  <!-- Left Lobe waves -->
+  <path d="M 45 32 Q 35 38 40 45 T 45 60" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" opacity="0.75" filter="url(#neon-glow)" />
+  <!-- Right Lobe waves -->
+  <path d="M 55 32 Q 65 38 60 45 T 55 60" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" opacity="0.75" filter="url(#neon-glow)" />
+
+  <!-- Main horizontal pulsing rhythm wave (The BrainWave) -->
+  <path d="M 18 50 
+           L 32 50 
+           L 38 32 
+           L 44 68 
+           L 50 42 
+           L 56 58 
+           L 62 48 
+           L 68 50 
+           L 82 50" 
+        fill="none" stroke="url(#gradient-wave)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon-glow)" />
+
+  <!-- Synapse Node dots -->
+  <circle cx="38" cy="32" r="2.5" fill="#06b6d4" filter="url(#neon-glow)" />
+  <circle cx="62" cy="32" r="2.5" fill="#3b82f6" filter="url(#neon-glow)" />
+  <circle cx="50" cy="78" r="2" fill="#8b5cf6" filter="url(#neon-glow)" />
+</svg>

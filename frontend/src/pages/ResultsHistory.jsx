@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { Award, BookOpen, Clock, ChevronDown, ChevronUp, CheckCircle2, XCircle, AlertCircle, Calendar, PlusCircle, LayoutDashboard, BrainCircuit } from 'lucide-react';
 
 const ResultsHistory = () => {
@@ -12,7 +14,7 @@ const ResultsHistory = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/quiz/my-results');
+        const res = await axios.get(`${API_URL}/api/quiz/my-results`);
         if (res.data.success) {
           setResults(res.data.results);
         }

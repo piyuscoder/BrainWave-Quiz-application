@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { 
   Shield, FileSpreadsheet, Plus, Trash2, Upload, AlertCircle, 
   CheckCircle2, ChevronLeft, ChevronRight, Info, X, HelpCircle,
@@ -75,7 +77,7 @@ const AdminDashboard = () => {
   const fetchQuizzes = async () => {
     setLoadingQuizzes(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/questions/quizzes');
+      const res = await axios.get(`${API_URL}/api/questions/quizzes`);
       if (res.data.success) {
         setQuizzes(res.data.quizzes);
         if (res.data.quizzes.length > 0 && !targetQuizId) {
@@ -102,7 +104,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     setLoadingUsers(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/users');
+      const res = await axios.get(`${API_URL}/api/auth/users`);
       if (res.data.success) {
         setUsers(res.data.users);
       }
@@ -124,7 +126,7 @@ const AdminDashboard = () => {
     setSelectedUserForResults(user);
     setLoadingUserResults(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/quiz/user-results/${user._id}`);
+      const res = await axios.get(`${API_URL}/api/quiz/user-results/${user._id}`);
       if (res.data.success) {
         setUserResults(res.data.results);
       }
@@ -139,7 +141,7 @@ const AdminDashboard = () => {
   const handleDeleteUser = async (userId) => {
     if (!window.confirm('Are you sure you want to permanently delete this user account?')) return;
     try {
-      const res = await axios.delete(`http://localhost:5000/api/auth/users/${userId}`);
+      const res = await axios.delete(`${API_URL}/api/auth/users/${userId}`);
       if (res.data.success) {
         showToast('success', 'User account successfully deleted.');
         fetchUsers();
@@ -166,7 +168,7 @@ const AdminDashboard = () => {
   const handleUpdateQuiz = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`http://localhost:5000/api/questions/quizzes/${editQuizId}`, {
+      const res = await axios.put(`${API_URL}/api/questions/quizzes/${editQuizId}`, {
         title: editQuizTitle,
         description: editQuizDescription,
         difficulty: editQuizDifficulty,
@@ -193,7 +195,7 @@ const AdminDashboard = () => {
     setExplorerPage(page);
     setExplorerLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/questions', {
+      const res = await axios.get(`${API_URL}/api/questions`, {
         params: {
           page: page,
           limit: 5,
@@ -217,7 +219,7 @@ const AdminDashboard = () => {
     e.stopPropagation(); // prevent opening explorer
     if (!window.confirm('WARNING: Deleting this quiz will also delete all associated questions in the database. Proceed?')) return;
     try {
-      const res = await axios.delete(`http://localhost:5000/api/questions/quizzes/${id}`);
+      const res = await axios.delete(`${API_URL}/api/questions/quizzes/${id}`);
       if (res.data.success) {
         showToast('success', 'Quiz box and all questions deleted.');
         fetchQuizzes();
@@ -234,7 +236,7 @@ const AdminDashboard = () => {
   const handleDeleteQuestion = async (qId) => {
     if (!window.confirm('Delete this question?')) return;
     try {
-      const res = await axios.delete(`http://localhost:5000/api/questions/${qId}`);
+      const res = await axios.delete(`${API_URL}/api/questions/${qId}`);
       if (res.data.success) {
         showToast('success', 'Question deleted.');
         handleExploreQuiz(selectedQuizForExplorer, explorerPage);
@@ -260,7 +262,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/questions', {
+      const res = await axios.post(`${API_URL}/api/questions`, {
         text: qText,
         options: optionsArray,
         correctAnswer: correctAnswer.trim(),
@@ -354,7 +356,7 @@ const AdminDashboard = () => {
     formData.append('technology', csvTitle); 
 
     try {
-      const res = await axios.post('http://localhost:5000/api/questions/upload-csv', formData, {
+      const res = await axios.post(`${API_URL}/api/questions/upload-csv`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

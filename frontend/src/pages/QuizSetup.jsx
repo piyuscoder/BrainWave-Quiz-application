@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { 
   Atom, Globe, Layers, Terminal, Coffee, Cpu, Database, Calculator, 
   BookOpen, Play, ShieldAlert, Award, HelpCircle, X, ChevronRight, Settings
@@ -20,7 +22,7 @@ const QuizSetup = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/questions/quizzes');
+        const res = await axios.get(`${API_URL}/api/questions/quizzes`);
         if (res.data.success) {
           setQuizzes(res.data.quizzes);
         }

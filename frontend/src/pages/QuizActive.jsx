@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { 
   Timer, ArrowRight, ShieldAlert, Award, RefreshCw, CheckCircle2, 
   XCircle, AlertCircle, Maximize2, ShieldCheck, HelpCircle 
@@ -56,7 +58,7 @@ const QuizActive = () => {
   useEffect(() => {
     const fetchQuizDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/quiz/questions?quizId=${quizId}`);
+        const res = await axios.get(`${API_URL}/api/quiz/questions?quizId=${quizId}`);
         if (res.data.success) {
           setQuestions(res.data.questions);
           setQuizInfo(res.data.quiz);
@@ -133,7 +135,7 @@ const QuizActive = () => {
         selectedOption: selectedAnswers[q._id] || null,
       }));
 
-      const res = await axios.post('http://localhost:5000/api/quiz/submit', {
+      const res = await axios.post(`${API_URL}/api/quiz/submit`, {
         quizId: quizId,
         answers: answersPayload,
       });

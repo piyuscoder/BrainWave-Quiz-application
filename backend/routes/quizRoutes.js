@@ -26,7 +26,7 @@ router.get('/techs', protect, async (req, res) => {
 // @access  Private
 router.get('/questions', protect, async (req, res) => {
   try {
-    const { quizId, limit = 50 } = req.query;
+    const { quizId, limit } = req.query;
 
     if (!quizId) {
       return res.status(400).json({ success: false, message: 'Please provide a quizId' });
@@ -40,8 +40,15 @@ router.get('/questions', protect, async (req, res) => {
     // Find all questions associated with this quiz, excluding correctAnswer
     const questionsPool = await Question.find({ _id: { $in: quiz.questions } }).select('-correctAnswer');
 
+    // If no limit is provided, return every uploaded question.
+    // If a limit is explicitly provided, respect it.
+    const requestedLimit = limit === undefined ? questionsPool.length : Number(limit);
+    const safeLimit = Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : questionsPool.length;
+
     // Return the questions in random order
-    const shuffledQuestions = questionsPool.sort(() => 0.5 - Math.random()).slice(0, Math.min(Number(limit), questionsPool.length));
+    const shuffledQuestions = questionsPool
+      .sort(() => 0.5 - Math.random())
+      .slice(0, Math.min(safeLimit, questionsPool.length));
 
     res.json({
       success: true,

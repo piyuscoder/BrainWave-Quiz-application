@@ -51,7 +51,7 @@ const AdminDashboard = () => {
   const [csvDifficulty, setCsvDifficulty] = useState('Medium');
   const [csvTimeLimit, setCsvTimeLimit] = useState(300);
   const [csvPoints, setCsvPoints] = useState(1);
-  const [csvNegativePoints, setCsvNegativePoints] = useState(0.25);
+  const [csvNegativePoints, setCsvNegativePoints] = useState(0.5);
   
   const [dragActive, setDragActive] = useState(false);
   const [csvFile, setCsvFile] = useState(null);
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
   const [editQuizDifficulty, setEditQuizDifficulty] = useState('Medium');
   const [editQuizTimeLimit, setEditQuizTimeLimit] = useState(300);
   const [editQuizPoints, setEditQuizPoints] = useState(1);
-  const [editQuizNegativePoints, setEditQuizNegativePoints] = useState(0.25);
+  const [editQuizNegativePoints, setEditQuizNegativePoints] = useState(0.5);
   const [editQuizTechnology, setEditQuizTechnology] = useState('');
 
   // General Toast Notification
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
     setEditQuizDifficulty(quiz.difficulty || 'Medium');
     setEditQuizTimeLimit(quiz.timeLimit || 300);
     setEditQuizPoints(quiz.points || 1);
-    setEditQuizNegativePoints(quiz.negativePoints || 0.25);
+    setEditQuizNegativePoints(quiz.negativePoints || 0.5);
     setEditQuizTechnology(quiz.technology || quiz.title);
     setShowEditModal(true);
   };
@@ -369,7 +369,7 @@ const AdminDashboard = () => {
         setCsvDifficulty('Medium');
         setCsvTimeLimit(300);
         setCsvPoints(1);
-        setCsvNegativePoints(0.25);
+        setCsvNegativePoints(0.5);
         fetchQuizzes();
       }
     } catch (err) {

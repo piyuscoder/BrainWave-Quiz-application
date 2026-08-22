@@ -255,8 +255,8 @@ router.post('/upload-csv', protect, adminOnly, upload.single('file'), async (req
     const description = req.body.description || '';
     const difficulty = req.body.difficulty || 'Easy';
     const timeLimit = parseInt(req.body.timeLimit || '300', 10);
-    const points = parseFloat(req.body.points || '1');
-    const negativePoints = parseFloat(req.body.negativePoints || '0.25');
+    const points = parseFloat(req.body.points ?? '1');
+    const negativePoints = parseFloat(req.body.negativePoints ?? '0.5');
     const technology = req.body.technology || title;
 
     // Check if Quiz with this title already exists

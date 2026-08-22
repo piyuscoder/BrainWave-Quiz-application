@@ -20,6 +20,7 @@ const QuizActive = () => {
   const [timeLeft, setTimeLeft] = useState(300); // Global countdown timer in seconds
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isLightMode, setIsLightMode] = useState(false);
 
   // Submission / Scoring states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -298,7 +299,7 @@ const QuizActive = () => {
                           ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                           : 'bg-red-500/10 text-red-400 border-red-500/20'
                     }`}>
-                      {ans.isCorrect ? 'Correct' : ans.selectedOption === null ? 'Timeout' : 'Wrong'}
+                      {ans.isCorrect ? 'Correct' : ans.selectedOption === null ? 'Not Attempted' : 'Wrong'}
                     </span>
                   </div>
 
@@ -345,123 +346,187 @@ const QuizActive = () => {
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
   const currentSelection = selectedAnswers[currentQuestion?._id] || '';
+  const displayCorrectPoints = Number(quizInfo?.points ?? 1);
+  const displayNegativePoints = Number(quizInfo?.negativePoints ?? 0.5);
+
+  const rootBg = isLightMode ? 'bg-slate-100' : 'bg-slate-950';
+  const panelBg = isLightMode ? 'bg-white border-slate-200 shadow-slate-200/50' : 'glass-panel border-cyan-500/20';
+  const topBarBg = isLightMode ? 'bg-cyan-100 border-cyan-200 text-cyan-700' : 'bg-cyan-500/10 border-cyan-500/10 text-cyan-400';
+  const sideBg = isLightMode ? 'bg-slate-100 border-slate-200' : 'bg-slate-950/60 border-slate-800';
+  const mutedText = isLightMode ? 'text-slate-600' : 'text-slate-500';
+  const strongText = isLightMode ? 'text-slate-900' : 'text-white';
+  const chipText = isLightMode ? 'text-slate-700' : 'text-slate-350';
+  const navButtonBase = isLightMode ? 'bg-slate-200 border-slate-300 text-slate-700 hover:border-slate-400' : 'bg-slate-900/80 border-slate-700 text-slate-400 hover:border-slate-500';
+  const activeNavButton = isLightMode ? 'bg-cyan-100 border-cyan-400 text-cyan-700' : 'bg-cyan-500/15 border-cyan-400 text-cyan-300';
+  const answeredNavButton = isLightMode ? 'bg-emerald-100 border-emerald-400 text-emerald-700' : 'bg-emerald-500/15 border-emerald-400 text-emerald-300';
+  const optionBase = isLightMode ? 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200' : 'bg-slate-900/40 border-slate-850 text-slate-300 hover:bg-slate-900/80 hover:border-slate-800';
+  const optionSelected = isLightMode ? 'bg-cyan-100 border-cyan-400 text-slate-900 shadow-md shadow-cyan-200/60' : 'bg-gradient-to-r from-cyan-500/15 to-blue-500/15 border-cyan-500 text-white shadow-md shadow-cyan-500/5';
+  const optionBadgeBase = isLightMode ? 'bg-slate-200 text-slate-700 border-slate-300' : 'bg-slate-950 text-slate-400 border-slate-850';
+  const footerButtonSecondary = isLightMode ? 'bg-slate-200 border-slate-300 text-slate-700 hover:text-slate-900' : 'bg-slate-900 border border-slate-850 hover:border-slate-750 text-slate-300 hover:text-white';
+  const submitButton = isLightMode ? 'bg-red-100 border-red-300 text-red-700 hover:bg-red-200' : 'bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20';
+  const nextButton = isLightMode ? 'bg-cyan-600 hover:bg-cyan-700 text-white' : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white';
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-8 relative">
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-cyan-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className={`min-h-screen ${rootBg} flex items-center justify-center px-2 py-2 relative overflow-hidden`}>
+      <div className={`absolute top-1/4 left-1/4 w-[300px] h-[300px] ${isLightMode ? 'bg-cyan-500/10' : 'bg-cyan-500/5'} rounded-full blur-[100px] pointer-events-none`}></div>
 
-      <div className="w-full max-w-3xl glass-panel rounded-2xl shadow-2xl relative z-10 overflow-hidden border border-cyan-500/20">
-        
-        {/* Fullscreen indicator banner */}
-        <div className="bg-cyan-500/10 border-b border-cyan-500/10 py-1.5 px-4 flex items-center justify-between text-[11px] text-cyan-400">
+      <div className={`w-full max-w-[1600px] h-[calc(100vh-0.75rem)] rounded-2xl shadow-2xl relative z-10 overflow-hidden border ${panelBg}`}>
+        <div className={`border-b py-1.5 px-4 flex items-center justify-between text-[11px] ${topBarBg}`}>
           <span className="flex items-center gap-1">
             <ShieldCheck className="h-3.5 w-3.5 animate-pulse" />
             <span>Secure Testing Environment Locked</span>
           </span>
-          <span className="flex items-center gap-1 font-bold">
-            <Maximize2 className="h-3 w-3" />
-            <span>Full Screen Mode Active</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsLightMode((prev) => !prev)}
+              className={`px-2 py-1 rounded-md border text-[10px] font-bold uppercase tracking-wide ${isLightMode ? 'bg-slate-900 text-white border-slate-700' : 'bg-white/10 border-slate-500/30 text-cyan-300'}`}
+            >
+              {isLightMode ? 'Dark mode' : 'Light mode'}
+            </button>
+            <span className="flex items-center gap-1 font-bold">
+              <Maximize2 className="h-3 w-3" />
+              <span>Full Screen Mode Active</span>
+            </span>
+          </div>
         </div>
 
-        <div className="p-6 sm:p-8 space-y-6">
-          
-          {/* Top Info Ribbon */}
-          <div className="flex justify-between items-center text-sm border-b border-slate-900 pb-4">
-            <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-white text-base">
-                Question {currentIndex + 1}
+        <div className="flex items-stretch h-[calc(100%-31px)]">
+          <aside className={`w-[40%] max-w-[420px] min-w-[260px] border-r p-2.5 flex flex-col ${sideBg}`}>
+            <div className="mb-2 px-1">
+              <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Questions</div>
+              <div className={`text-sm font-bold ${strongText}`}>{totalQuestions} total</div>
+            </div>
+
+            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-1.5 justify-items-center">
+              {questions.map((question, idx) => {
+                const isCurrent = idx === currentIndex;
+                const isAnswered = Boolean(selectedAnswers[question._id]);
+
+                return (
+                  <button
+                    key={question._id}
+                    type="button"
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-8 w-8 rounded-md border text-[10px] font-bold transition-all ${
+                      isCurrent
+                        ? activeNavButton
+                        : isAnswered
+                          ? answeredNavButton
+                          : navButtonBase
+                    }`}
+                    title={`Jump to question ${idx + 1}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </aside>
+
+          <main className={`flex-1 flex flex-col p-4 sm:p-5 lg:p-6 min-w-0 ${isLightMode ? 'bg-slate-50' : 'bg-slate-950/5'}`}>
+            <div className={`flex items-center justify-between text-sm border-b pb-3 mb-3 ${isLightMode ? 'border-slate-200' : 'border-slate-900'}`}>
+              <div className="flex items-center gap-2">
+                <span className={`font-extrabold text-base ${strongText}`}>Question {currentIndex + 1}</span>
+                <span className={mutedText}>of {totalQuestions}</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <div className={`border px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase ${isLightMode ? 'bg-slate-200 border-slate-300 text-slate-700' : 'bg-slate-900/60 border-slate-850 text-slate-350'}`}>
+                  {quizInfo?.title || 'Sandbox'}
+                </div>
+
+                <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-xl font-black border tracking-wider text-xs ${
+                  timeLeft <= 60
+                    ? 'bg-red-500/10 text-red-400 border-red-500/20 animate-pulse'
+                    : isLightMode
+                      ? 'bg-slate-200 border-slate-300 text-slate-700'
+                      : 'bg-slate-950 border-slate-850 text-slate-300'
+                }`}>
+                  <Timer className={`h-3.5 w-3.5 ${timeLeft <= 60 ? 'animate-bounce' : ''}`} />
+                  <span>{formatTime(timeLeft)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-3 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
+              <span className={`inline-flex items-center gap-1.5 border px-2 py-1 rounded-full ${isLightMode ? 'bg-emerald-100 border-emerald-300 text-emerald-700' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'}`}>
+                <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+                Correct +{displayCorrectPoints}
               </span>
-              <span className="text-slate-500">
-                of {totalQuestions}
+              <span className={`inline-flex items-center gap-1.5 border px-2 py-1 rounded-full ${isLightMode ? 'bg-red-100 border-red-300 text-red-700' : 'bg-red-500/10 border-red-500/20 text-red-300'}`}>
+                <span className="h-2 w-2 rounded-full bg-red-400"></span>
+                Incorrect -{displayNegativePoints}
               </span>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="bg-slate-900/60 border border-slate-850 px-2.5 py-1 rounded-full text-slate-350 text-xs font-semibold uppercase">
-                {quizInfo?.title || 'Sandbox'}
+            <div className="flex-1 flex flex-col min-h-0">
+              <div className="min-h-[72px] flex items-center mb-2">
+                <h3 className={`text-base sm:text-lg lg:text-xl font-bold leading-relaxed ${strongText}`}>
+                  {currentQuestion?.text}
+                </h3>
               </div>
 
-              {/* Global Quiz Countdown Timer */}
-              <div className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl font-black border tracking-wider text-sm ${
-                timeLeft <= 60 
-                  ? 'bg-red-500/10 text-red-400 border-red-500/20 animate-pulse' 
-                  : 'bg-slate-950 border-slate-850 text-slate-300'
-              }`}>
-                <Timer className={`h-4.5 w-4.5 ${timeLeft <= 60 ? 'animate-bounce' : ''}`} />
-                <span>{formatTime(timeLeft)}</span>
+              <div className="grid grid-cols-1 gap-2.5 mb-2">
+                {currentQuestion?.options.map((option, idx) => {
+                  const isSelected = currentSelection === option;
+                  const optionLetter = ['A', 'B', 'C', 'D'][idx];
+
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleSelectOption(option)}
+                      className={`w-full text-left p-3 rounded-xl border flex items-center space-x-3 transition-all duration-200 ${
+                        isSelected ? optionSelected : optionBase
+                      }`}
+                    >
+                      <span className={`h-7 w-7 rounded-lg flex items-center justify-center text-xs font-extrabold border shrink-0 ${
+                        isSelected
+                          ? 'bg-cyan-500 text-slate-950 border-cyan-400'
+                          : optionBadgeBase
+                      }`}>
+                        {optionLetter}
+                      </span>
+                      <span className="text-base font-medium">{option}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-          </div>
 
-          {/* Question Text */}
-          <div className="min-h-[90px] flex items-center">
-            <h3 className="text-lg sm:text-xl font-bold text-white leading-relaxed">
-              {currentQuestion?.text}
-            </h3>
-          </div>
+            <div className={`flex items-center justify-between pt-3 border-t mt-auto ${isLightMode ? 'border-slate-200' : 'border-slate-900'}`}>
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className={`${footerButtonSecondary} py-2 px-4 rounded-xl font-bold transition-all text-xs disabled:opacity-20 disabled:cursor-not-allowed`}
+              >
+                Previous
+              </button>
 
-          {/* Options List */}
-          <div className="grid grid-cols-1 gap-3.5">
-            {currentQuestion?.options.map((option, idx) => {
-              const isSelected = currentSelection === option;
-              const optionLetter = ['A', 'B', 'C', 'D'][idx];
+              <button
+                onClick={handleSubmitQuiz}
+                disabled={isSubmitting}
+                className={`${submitButton} font-bold py-2 px-5 rounded-xl transition-all text-xs`}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
 
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleSelectOption(option)}
-                  className={`w-full text-left p-4 rounded-xl border flex items-center space-x-3.5 transition-all duration-205 group ${
-                    isSelected
-                      ? 'bg-gradient-to-r from-cyan-500/15 to-blue-500/15 border-cyan-500 text-white shadow-md shadow-cyan-500/5'
-                      : 'bg-slate-900/40 border-slate-850 text-slate-300 hover:bg-slate-900/80 hover:border-slate-800'
-                  }`}
-                >
-                  <span className={`h-7 w-7 rounded-lg flex items-center justify-center text-xs font-extrabold border shrink-0 transition-colors ${
-                    isSelected
-                      ? 'bg-cyan-500 text-slate-950 border-cyan-400'
-                      : 'bg-slate-950 text-slate-400 border-slate-850 group-hover:border-slate-700'
-                  }`}>
-                    {optionLetter}
-                  </span>
-                  <span className="text-sm font-medium">{option}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Footer Controls */}
-          <div className="flex justify-between items-center pt-4 border-t border-slate-900">
-            {/* Prev Question */}
-            <button
-              onClick={handlePrev}
-              disabled={currentIndex === 0}
-              className="bg-slate-900 border border-slate-850 hover:border-slate-750 text-slate-300 hover:text-white py-2 px-5 rounded-xl font-bold transition-all text-xs disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-
-            <span className="text-[10px] text-slate-500 italic hidden sm:inline">
-              * Quiz auto-submits when the global timer expires.
-            </span>
-
-            {/* Next / Submit Question */}
-            <button
-              onClick={handleNext}
-              disabled={isSubmitting}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-2.5 px-6 rounded-xl font-bold transition-all shadow-md flex items-center space-x-1.5 text-xs hover:-translate-y-0.5 cursor-pointer"
-            >
-              {isSubmitting ? (
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  <span>{currentIndex === totalQuestions - 1 ? 'Submit Quiz' : 'Next'}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </>
-              )}
-            </button>
-          </div>
-
+              <button
+                onClick={handleNext}
+                disabled={isSubmitting}
+                className={`${nextButton} py-2.5 px-5 rounded-xl font-bold transition-all shadow-md flex items-center space-x-1.5 text-xs hover:-translate-y-0.5 cursor-pointer`}
+              >
+                {isSubmitting ? (
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <span>{currentIndex === totalQuestions - 1 ? 'Submit Quiz' : 'Next'}</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </div>
+          </main>
         </div>
       </div>
     </div>

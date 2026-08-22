@@ -279,19 +279,19 @@ const QuizSetup = () => {
               <div className="p-4 bg-slate-950/70 border border-slate-850 rounded-xl space-y-3.5">
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="p-2.5 bg-slate-900 border border-slate-850 rounded-xl">
-                    <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Correct Option</span>
-                    <span className="text-emerald-400 font-extrabold text-xs">+{selectedQuiz.points || 1} Point</span>
+                    <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Correct Answer</span>
+                    <span className="text-emerald-400 font-extrabold text-xs">+{Number(selectedQuiz.points || 1)} points</span>
                   </div>
                   <div className="p-2.5 bg-slate-900 border border-slate-850 rounded-xl">
-                    <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Incorrect Option</span>
-                    <span className="text-red-400 font-extrabold text-xs">-{selectedQuiz.negativePoints || 0.25} Deduct</span>
+                    <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Wrong Answer</span>
+                    <span className="text-red-400 font-extrabold text-xs">-{Number(selectedQuiz.negativePoints || 0.5)} negative</span>
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-slate-900 border border-slate-850 rounded-xl text-xs">
-                  <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Timer Limit Rule</span>
+                  <span className="text-slate-500 block uppercase font-bold tracking-wider mb-0.5 text-[9px]">Timer</span>
                   <span className="text-cyan-400 font-extrabold text-xs">
-                    {Math.round((selectedQuiz.timeLimit || 300) / 60)} Minutes Total Duration
+                    {Math.round((selectedQuiz.timeLimit || 300) / 60)} minutes total duration
                   </span>
                 </div>
               </div>

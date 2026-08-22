@@ -392,13 +392,14 @@ const QuizActive = () => {
         </div>
 
         <div className="flex items-stretch h-[calc(100%-31px)]">
-          <aside className={`w-[40%] max-w-[420px] min-w-[260px] border-r p-2.5 flex flex-col ${sideBg}`}>
+          <aside className={`w-[40%] max-w-[420px] min-w-[260px] min-h-0 border-r p-2.5 flex flex-col ${sideBg}`}>
             <div className="mb-2 px-1">
               <div className={`text-[10px] font-bold uppercase tracking-wider ${mutedText}`}>Questions</div>
               <div className={`text-sm font-bold ${strongText}`}>{totalQuestions} total</div>
             </div>
 
-            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-1.5 justify-items-center">
+            <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-1.5 justify-items-center">
               {questions.map((question, idx) => {
                 const isCurrent = idx === currentIndex;
                 const isAnswered = Boolean(selectedAnswers[question._id]);
@@ -421,6 +422,7 @@ const QuizActive = () => {
                   </button>
                 );
               })}
+              </div>
             </div>
           </aside>
 
